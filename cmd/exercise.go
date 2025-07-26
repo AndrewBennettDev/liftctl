@@ -9,8 +9,12 @@ import (
 )
 
 var (
-	exerciseName   string
-	exerciseMuscle string
+	exerciseName       string
+	exerciseMuscle     string
+	editExerciseID     uint
+	editExerciseName   string
+	editExerciseMuscle string
+	deleteExerciseID   uint
 )
 
 var addExerciseCmd = &cobra.Command{
@@ -64,7 +68,38 @@ var editExerciseCmd = &cobra.Command{
 	Use:   "edit-exercise",
 	Short: "Edit an existing exercise",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Edit exercise functionality is not implemented yet.")
+		if editExerciseID == 0 {
+			fmt.Println("--id is required and must be a positive integer")
+			return
+		}
+
+		if editExerciseName == "" && editExerciseMuscle == "" {
+			fmt.Println("At least one of --name or --muscle must be provided to update")
+			return
+		}
+
+		db := db.GetDB()
+		var exercise models.Exercise
+
+		if err := db.First(&exercise, editExerciseID).Error; err != nil {
+			fmt.Printf("Exercise with ID %d not found.\n", editExerciseID)
+			return
+		}
+
+		if editExerciseName != "" {
+			exercise.Name = editExerciseName
+		}
+		if editExerciseMuscle != "" {
+			exercise.Muscle = editExerciseMuscle
+		}
+
+		if err := db.Save(&exercise).Error; err != nil {
+			fmt.Println("Failed to update exercise:", err)
+			return
+		}
+
+		fmt.Printf("Exercise ID %d updated successfully!\n", exercise.ID)
+
 	},
 }
 
@@ -72,7 +107,24 @@ var deleteExerciseCmd = &cobra.Command{
 	Use:   "delete-exercise",
 	Short: "Delete an existing exercise",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Delete exercise functionality is not implemented yet.")
+		if deleteExerciseID == 0 {
+			fmt.Println("--id is required and must be a valid positive integer")
+			return
+		}
+
+		db := db.GetDB()
+		var exercise models.Exercise
+		if err := db.First(&exercise, deleteExerciseID).Error; err != nil {
+			fmt.Printf("Exercise with ID %d not found.\n", deleteExerciseID)
+			return
+		}
+
+		if err := db.Delete(&exercise).Error; err != nil {
+			fmt.Println("Failed to delete exercise:", err)
+			return
+		}
+
+		fmt.Printf("Exercise with ID %d deleted successfully.\n", deleteExerciseID)
 	},
 }
 
@@ -82,6 +134,14 @@ func init() {
 	rootCmd.AddCommand(editExerciseCmd)
 	rootCmd.AddCommand(deleteExerciseCmd)
 
-	addExerciseCmd.Flags().StringVar(&exerciseName, "name", "", "Name of the exercise")
-	addExerciseCmd.Flags().StringVar(&exerciseMuscle, "muscle", "", "Target muscle group (optional)")
+	addExerciseCmd.Flags().StringVarP(&exerciseName, "name", "n", "", "Name of the exercise")
+	addExerciseCmd.Flags().StringVarP(&exerciseMuscle, "muscle", "m", "", "Target muscle group (optional)")
+
+	editExerciseCmd.Flags().UintVarP(&editExerciseID, "id", "i", 0, "ID of the exercise to edit")
+	editExerciseCmd.Flags().StringVarP(&editExerciseName, "name", "n", "", "New name for the exercise")
+	editExerciseCmd.Flags().StringVarP(&editExerciseMuscle, "muscle", "m", "", "New muscle group for the exercise")
+	editExerciseCmd.MarkFlagRequired("id")
+
+	deleteExerciseCmd.Flags().UintVarP(&deleteExerciseID, "id", "i", 0, "ID of the exercise to delete")
+	deleteExerciseCmd.MarkFlagRequired("id")
 }

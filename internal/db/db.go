@@ -20,11 +20,23 @@ func Init() *gorm.DB {
 	}
 	fmt.Println("Connected to database")
 
-	err = DB.AutoMigrate(&models.Exercise{}, &models.Routine{})
+	err = DB.AutoMigrate(
+		&models.Exercise{},
+		&models.Routine{},
+		&models.RoutineExercise{},
+		&models.Workout{},
+		&models.WorkoutSet{})
 	if err != nil {
 		log.Fatal("failed to migrate database: ", err)
 	}
 	fmt.Println("Database migrated")
 
+	return DB
+}
+
+func GetDB() *gorm.DB {
+	if DB == nil {
+		log.Fatal("Database not initialized. Call Init() first.")
+	}
 	return DB
 }

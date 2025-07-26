@@ -1,21 +1,25 @@
 # `liftctl`
 
-A command-line interface (CLI) tool written in Go for tracking exercises, creating workout routines, and managing workout sessions. The data is stored locally using SQLite with GORM as the ORM.
-
-> **Work in Progress:** This project is actively being developed. Some commands and features are incomplete or planned for future releases. Use accordingly.
+A terminal-based workout tracking application written in Go. Features a modern TUI (Terminal User Interface) for managing exercises, creating workout routines, and tracking workout sessions. All data is stored locally using SQLite with GORM as the ORM.
 
 ## Features
 
-- Add and list exercises
-- Create workout routines and associate exercises (coming soon)
-- Start workout routines and track progress (planned)
+- **Interactive TUI**: Modern terminal interface built with Bubble Tea
+- **Exercise Management**: Add and organize exercises by muscle groups
+- **Routine Creation**: Build custom workout routines with exercises, sets, reps, and weights
+- **Live Workout Tracking**: Start workouts from routines and track progress in real-time
+- **Set Management**: Edit reps and weights during workouts, mark sets as complete
+- **Workout History**: Complete and manage workout sessions
+- **Local Storage**: All data stored locally in SQLite database
 
 ## Technology Stack
 
-- Go
-- [Cobra](https://github.com/spf13/cobra) for CLI commands
-- [GORM](https://gorm.io/) ORM for SQLite integration
-- SQLite for local data persistence
+- **Go** - Core application language
+- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)** - TUI framework for interactive terminal interface
+- **[Lip Gloss](https://github.com/charmbracelet/lipgloss)** - Terminal styling and layout
+- **[Cobra](https://github.com/spf13/cobra)** - CLI command structure
+- **[GORM](https://gorm.io/)** - ORM for database operations
+- **SQLite** - Local data persistence
 
 ## Installation
 
@@ -24,52 +28,66 @@ A command-line interface (CLI) tool written in Go for tracking exercises, creati
 2. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/workout-tracker.git
-   cd workout-tracker
+   git clone https://github.com/AndrewBennettDev/liftctl.git
+   cd liftctl
    ```
 
-3. Build the CLI binary:
+3. Build the application:
 
    ```bash
    go build -o liftctl
    ```
 
-4. Run the CLI:
+4. Run the TUI:
 
    ```bash
-   ./liftctl
+   ./liftctl tui
    ```
 
 ## Usage
 
-Run commands with:
+### TUI Mode (Recommended)
+
+Launch the interactive terminal interface:
 
 ```bash
-./liftctl <command> [flags]
+./liftctl tui
 ```
 
-### Available Commands
+#### Navigation
+- **Arrow Keys** or **j/k**: Navigate up/down through options
+- **Enter**: Select/confirm
+- **ESC**: Go back or cancel
+- **q**: Quit application
+- **b**: Back to main menu
+- **t**: Toggle set completion (in active workouts)
+
+#### Workflow
+1. **Create Exercises**: Add exercises with muscle group targeting
+2. **Build Routines**: Create workout routines by adding exercises with planned sets, reps, and weights
+3. **Start Workouts**: Begin a workout session from any routine
+4. **Track Progress**: Edit weights/reps during workouts, mark sets complete
+5. **Manage Sessions**: Complete or delete workout sessions
+
+### CLI Commands
+
+Basic CLI commands are also available:
 
 #### Add Exercise
 
-Add a new exercise to the database.
+Add a new exercise to the database:
 
 ```bash
 ./liftctl add-exercise --name "Bench Press" --muscle "chest"
 ```
 
-- `--name` (required): Name of the exercise  
-- `--muscle` (optional): Target muscle group
-
 #### List Exercises
 
-List all exercises stored in the database.
+List all exercises in the database:
 
 ```bash
 ./liftctl list-exercises
 ```
-
-This command displays all exercises with their ID, name, and muscle group.
 
 ---
 
@@ -77,21 +95,55 @@ This command displays all exercises with their ID, name, and muscle group.
 
 ```
 liftctl/
-├── cmd/               # CLI command definitions
-├── internal/          # Internal packages (database, models)
-│   ├── db/
-│   └── models/
-├── main.go            # Entry point
+├── cmd/                    # CLI command definitions
+│   ├── root.go
+│   ├── exercise.go
+│   ├── routine.go
+│   ├── workout.go
+│   └── tui.go
+├── internal/              # Internal packages
+│   ├── db/                # Database connection and setup
+│   │   └── db.go
+│   └── models/            # Data models
+│       ├── exercise.go
+│       ├── routine.go
+│       └── workout.go
+├── tui/                   # Terminal User Interface
+│   ├── main.go           # TUI entry point
+│   ├── model.go          # Application state
+│   ├── view.go           # UI rendering
+│   ├── update.go         # Event handling
+│   └── components/       # Reusable UI components
+├── main.go               # Application entry point
 ├── go.mod
-└── workout.db         # SQLite database (created on first run)
+├── go.sum
+└── workout.db           # SQLite database (created on first run)
 ```
 
-## Future Work
+## Database Schema
 
-- Implement routines management commands (`create-routine`, `add-to-routine`)  
-- Implement starting and tracking workout sessions (`start-routine`)  
-- Add update and delete commands for exercises and routines  
-- Improve CLI UX and error handling
+The application uses the following main entities:
+
+- **Exercise**: Individual exercises with name and muscle group
+- **Routine**: Collections of exercises forming workout plans
+- **RoutineExercise**: Junction table linking routines to exercises with planned sets/reps/weight
+- **Workout**: Individual workout sessions
+- **WorkoutSet**: Individual sets within workouts with actual performance data
+
+## Development
+
+To contribute or modify the application:
+
+```bash
+# Install dependencies
+go mod download
+
+# Run in development
+go run main.go tui
+
+# Build for production
+go build -o liftctl
+```
 
 ## License
 
