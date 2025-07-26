@@ -24,8 +24,8 @@ A command-line interface (CLI) tool written in Go for tracking exercises, creati
 2. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/workout-tracker.git
-   cd workout-tracker
+   git clone https://github.com/AndrewBennettDev/liftctl.git
+   cd liftctl
    ```
 
 3. Build the CLI binary:
