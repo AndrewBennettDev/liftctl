@@ -1,6 +1,6 @@
 # `liftctl`
 
-A terminal-based workout tracking application written in Go. Features a modern TUI (Terminal User Interface) for managing exercises, creating workout routines, and tracking workout sessions. All data is stored locally using SQLite with GORM as the ORM.
+A terminal-based workout tracking application written in Go. Features a modern TUI for managing exercises, creating workout routines, and tracking workout sessions. All data is stored locally using SQLite with GORM as the ORM.
 
 ## Features
 
@@ -25,7 +25,7 @@ A terminal-based workout tracking application written in Go. Features a modern T
 
 1. Ensure you have [Go](https://golang.org/dl/) installed (version 1.18 or later recommended).
 
-2. Clone this repository:
+2. Clone this repo:
 
    ```bash
    git clone https://github.com/AndrewBennettDev/liftctl.git
@@ -46,9 +46,9 @@ A terminal-based workout tracking application written in Go. Features a modern T
 
 ## Usage
 
-### TUI Mode (Recommended)
+### TUI Mode
 
-Launch the interactive terminal interface:
+Launch the TUI:
 
 ```bash
 ./liftctl tui
@@ -89,17 +89,8 @@ List all exercises in the database:
 ./liftctl list-exercises
 ```
 
----
+For a full list of commands simply run the `./liftctl` command!
 
-## Database Schema
-
-The application uses the following main entities:
-
-- **Exercise**: Individual exercises with name and muscle group
-- **Routine**: Collections of exercises forming workout plans
-- **RoutineExercise**: Junction table linking routines to exercises with planned sets/reps/weight
-- **Workout**: Individual workout sessions
-- **WorkoutSet**: Individual sets within workouts with actual performance data
 
 ## Development
 
