@@ -148,7 +148,7 @@ func (m model) viewAddExercise() string {
 		s += "\n\nPress ESC to cancel"
 		return s
 	} else {
-		s := fmt.Sprintf("Create New Exercise - Step 2/2\n\n")
+		s := "Create New Exercise - Step 2/2\n\n"
 		s += fmt.Sprintf("Exercise: %s\n", m.exerciseName)
 		s += "Enter muscle group: " + m.inputBuffer
 		if len(m.inputBuffer)%2 == 0 {

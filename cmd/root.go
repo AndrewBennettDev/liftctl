@@ -12,7 +12,6 @@ var rootCmd = &cobra.Command{
 	Use:   "liftctl",
 	Short: "Workout tracker CLI",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Initializing database...")
 		db.Init()
 	},
 }
