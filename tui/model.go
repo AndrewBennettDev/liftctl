@@ -40,6 +40,10 @@ type model struct {
 	editingIndex int
 	editingField string
 	editingValue string
+
+	exerciseName   string
+	exerciseMuscle string
+	exerciseStep   int
 }
 
 type Exercise struct {

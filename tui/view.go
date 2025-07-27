@@ -139,10 +139,24 @@ func (m model) viewAddRoutine() string {
 }
 
 func (m model) viewAddExercise() string {
-	s := "Create New Exercise\n\n"
-	s += "This feature is not yet implemented.\n"
-	s += "Press ESC to go back."
-	return s
+	if m.exerciseStep == 0 {
+		s := "Create New Exercise - Step 1/2\n\n"
+		s += "Enter exercise name: " + m.inputBuffer
+		if len(m.inputBuffer)%2 == 0 {
+			s += "█"
+		}
+		s += "\n\nPress ESC to cancel"
+		return s
+	} else {
+		s := fmt.Sprintf("Create New Exercise - Step 2/2\n\n")
+		s += fmt.Sprintf("Exercise: %s\n", m.exerciseName)
+		s += "Enter muscle group: " + m.inputBuffer
+		if len(m.inputBuffer)%2 == 0 {
+			s += "█"
+		}
+		s += "\n\nPress ESC to cancel"
+		return s
+	}
 }
 
 func (m model) viewSelectRoutineForWorkout() string {

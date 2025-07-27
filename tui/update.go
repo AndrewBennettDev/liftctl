@@ -65,6 +65,9 @@ func (m model) handleInput(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.currentView = ViewRoutines
 		} else if m.currentView == ViewAddExercise {
 			m.inputBuffer = ""
+			m.exerciseName = ""
+			m.exerciseMuscle = ""
+			m.exerciseStep = 0
 			m.currentView = ViewExercises
 		} else if m.currentView == ViewEditRoutineExercise {
 			if m.editingField != "" {
@@ -119,7 +122,22 @@ func (m model) handleInputSubmit() (tea.Model, tea.Cmd) {
 		}
 		m.inputBuffer = ""
 	case ViewAddExercise:
-		m.currentView = ViewExercises
+		if strings.TrimSpace(m.inputBuffer) != "" {
+			if m.exerciseStep == 0 {
+				m.exerciseName = strings.TrimSpace(m.inputBuffer)
+				m.exerciseStep = 1
+				m.inputBuffer = ""
+				return m, nil
+			} else if m.exerciseStep == 1 {
+				m.exerciseMuscle = strings.TrimSpace(m.inputBuffer)
+				m.createExerciseFromInput()
+				m.loadExercises()
+				m.exerciseName = ""
+				m.exerciseMuscle = ""
+				m.exerciseStep = 0
+				m.currentView = ViewExercises
+			}
+		}
 		m.inputBuffer = ""
 	case ViewEditRoutineExercise:
 		if strings.TrimSpace(m.editingValue) != "" {
@@ -153,6 +171,17 @@ func (m *model) createRoutineFromInput() {
 	}
 }
 
+func (m *model) createExerciseFromInput() {
+	ex := models.Exercise{
+		Name:   m.exerciseName,
+		Muscle: m.exerciseMuscle,
+	}
+
+	db := db.GetDB()
+	if err := db.Create(&ex).Error; err != nil {
+	}
+}
+
 func (m model) handleEnter() (tea.Model, tea.Cmd) {
 	switch m.currentView {
 	case ViewMainMenu:
@@ -171,6 +200,9 @@ func (m model) handleEnter() (tea.Model, tea.Cmd) {
 		if m.cursor == 0 {
 			m.currentView = ViewAddExercise
 			m.inputBuffer = ""
+			m.exerciseName = ""
+			m.exerciseMuscle = ""
+			m.exerciseStep = 0
 		}
 	case ViewRoutines:
 		if m.cursor == 0 {

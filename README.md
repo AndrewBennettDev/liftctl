@@ -91,35 +91,6 @@ List all exercises in the database:
 
 ---
 
-## Project Structure
-
-```
-liftctl/
-├── cmd/                    # CLI command definitions
-│   ├── root.go
-│   ├── exercise.go
-│   ├── routine.go
-│   ├── workout.go
-│   └── tui.go
-├── internal/              # Internal packages
-│   ├── db/                # Database connection and setup
-│   │   └── db.go
-│   └── models/            # Data models
-│       ├── exercise.go
-│       ├── routine.go
-│       └── workout.go
-├── tui/                   # Terminal User Interface
-│   ├── main.go           # TUI entry point
-│   ├── model.go          # Application state
-│   ├── view.go           # UI rendering
-│   ├── update.go         # Event handling
-│   └── components/       # Reusable UI components
-├── main.go               # Application entry point
-├── go.mod
-├── go.sum
-└── workout.db           # SQLite database (created on first run)
-```
-
 ## Database Schema
 
 The application uses the following main entities:
